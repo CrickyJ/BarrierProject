@@ -10,7 +10,6 @@ public class semaphoreBarrier implements Barrier
 
 	public semaphoreBarrier(int N)
 	{
-		int count = 0;
 		max = N;
 		//throw new java.lang.UnsupportedOperationException("Semaphore not supported yet.");
 	}
@@ -52,13 +51,13 @@ public class semaphoreBarrier implements Barrier
 			unlock1();//SignalAll -- Barrier 1 unlock
         }
         else {
-			while(arrived.get() > 0);//Wait at barrier
+			while(arrived.get() > 0);//Wait at barrier until signaled
 		}
 
 		System.out.println(leaving.get() + " = " + 0 + "?");
 		if(leaving.decrementAndGet() == 0) {
-			unlock2();
 			lock1();
+		    unlock2();
 		}
 		else {
 			while(leaving.get() < max); //Wait
@@ -67,20 +66,20 @@ public class semaphoreBarrier implements Barrier
 		//throw new java.lang.UnsupportedOperationException("Semaphore not supported yet.");
 	}
 
-	private void lock1() { //Lock Barrier1
-		arrived.set(0);
+	private void lock1() { //Lock Barrier1, all threads left
+	    arrived.set(0);
 	}
 
-	private void lock2() {
-		arrived.set(0); //Unlock first barrier
+	private void lock2() { //Lock Barrier2, all threads arrived
+	    leaving.set(max);
 	}
 
-	private void unlock1() {
-		leaving.set(max); //Unlock first barrier
+	private void unlock1() { //Unlock if all threads arrive
+        arrived.set(0); //Unlock first barrier
 		System.out.println("ALL ARRIVED: UNLOCK 1");
 	}
 
-	private void unlock2() {
+	private void unlock2() { //Unlock if all threads leave
 		leaving.set(0);
 		System.out.println("ALL ARRIVED: UNLOCK 2");
 	}
