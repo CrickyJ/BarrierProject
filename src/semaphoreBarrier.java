@@ -17,7 +17,7 @@ public class semaphoreBarrier implements Barrier
 	public void arriveAndWait()
 	{
 
-		//		/*****************************START OF LOOP****************************/
+		//		/****************************START OF LOOP****************************/
 		//		mutex.wait()
 		//		count += 1
 		//		if (count == n) { //If all threads have been counted
