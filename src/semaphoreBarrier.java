@@ -48,7 +48,7 @@ public class semaphoreBarrier implements Barrier
 
 		if(firstStart) {
 			arrived.incrementAndGet();
-			System.out.println("Arrived: " + arrived.get() + " = " + max + "?");
+			//System.out.println("Arrived: " + arrived.get() + " = " + max + "?");
 			if (arrived.get() == max) { //If all threads have been counted
 				lock2();//Barrier 2 lock
 				unlock1();//SignalAll -- Barrier 1 unlock
@@ -63,9 +63,9 @@ public class semaphoreBarrier implements Barrier
 
 		else {
 			leaving.decrementAndGet();
-			System.out.println("Leaving:" + leaving.get() + " = " + 0 + "?");
+			//System.out.println("Leaving:" + leaving.get() + " = " + 0 + "?");
 			if(leaving.get() == 0) {
-				lock1();
+			    lock1();
 				unlock2();
 				firstStart = true;
 			}
@@ -96,7 +96,7 @@ public class semaphoreBarrier implements Barrier
 	}
 
 	private void unlock2() { //Unlock if all threads leave
-		leaving.set(0);
+		leaving.set(max);
 		System.out.println("ALL ARRIVED: UNLOCK 2");
 	}
 }
