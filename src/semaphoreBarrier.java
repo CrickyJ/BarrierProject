@@ -81,7 +81,7 @@ public class semaphoreBarrier implements Barrier
 	}
 
 	private void lock1() { //Lock Barrier1, all threads left
-	    arrived.set(max);
+	    arrived.set(0);
 	    System.out.println("LOCK 1");
 	}
 
