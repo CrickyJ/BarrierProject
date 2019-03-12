@@ -7,6 +7,7 @@ public class semaphoreBarrier implements Barrier
 	private AtomicInteger arrived = new AtomicInteger(0); //
 	private AtomicInteger leaving = new AtomicInteger(0);
 	private int max = 0; //maximum threads barrier will count
+	private boolean firstStart = true;
 
 	public semaphoreBarrier(int N)
 	{
@@ -45,33 +46,48 @@ public class semaphoreBarrier implements Barrier
 		//
 		///******************************END OF LOOP******************************/
 
-		System.out.println(arrived.get() + " = " + max + "?");
-		if (arrived.incrementAndGet() == max) { //If all threads have been counted
-			lock2();//Barrier 2 lock
-			unlock1();//SignalAll -- Barrier 1 unlock
-        }
-        else {
-			while(arrived.get() > 0);//Wait at barrier until signaled
+		if(firstStart) {
+			arrived.incrementAndGet();
+			System.out.println("Arrived: " + arrived.get() + " = " + max + "?");
+			if (arrived.get() == max) { //If all threads have been counted
+				lock2();//Barrier 2 lock
+				unlock1();//SignalAll -- Barrier 1 unlock
+				firstStart = false;
+			}
+			else {
+				while(arrived.get() > 0)
+					//System.out.println("Still " + arrived.get());
+					;//Wait at barrier until signaled
+			}
 		}
 
-		System.out.println(leaving.get() + " = " + 0 + "?");
-		if(leaving.decrementAndGet() == 0) {
-			lock1();
-		    unlock2();
-		}
 		else {
-			while(leaving.get() < max); //Wait
+			leaving.decrementAndGet();
+			System.out.println("Leaving:" + leaving.get() + " = " + 0 + "?");
+			if(leaving.get() == 0) {
+				lock1();
+				unlock2();
+				firstStart = true;
+			}
+			else {
+				while(leaving.get() < max)
+					; //Wait
+			}
 		}
-
+		if(firstStart) {
+			System.out.println("EXIT BARRIER");
+		}
 		//throw new java.lang.UnsupportedOperationException("Semaphore not supported yet.");
 	}
 
 	private void lock1() { //Lock Barrier1, all threads left
-	    arrived.set(0);
+	    arrived.set(max);
+	    System.out.println("LOCK 1");
 	}
 
 	private void lock2() { //Lock Barrier2, all threads arrived
-	    leaving.set(max);
+		leaving.set(max);
+		System.out.println("LOCK 2");
 	}
 
 	private void unlock1() { //Unlock if all threads arrive

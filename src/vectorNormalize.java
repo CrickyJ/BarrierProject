@@ -31,5 +31,6 @@ public class vectorNormalize implements Runnable
 			vector.set(i, vector.get(i)/Math.sqrt(mag_sq.sum()));
 		}
 		b.arriveAndWait();
+		//System.out.println("TEST DONE");
 	}
 }
