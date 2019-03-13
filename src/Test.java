@@ -38,7 +38,7 @@ public class Test
 		int iterations = 30;
 
 		Barrier spin = new spinBarrier(N);
-		//Barrier mb = new monitorBarrier(N);
+		Barrier mb = new monitorBarrier(N);
 		Barrier sb = new semaphoreBarrier(N);
 		String barrier_type;
 		for(int iteration = 1; iteration <= iterations; iteration++)
@@ -53,14 +53,14 @@ public class Test
 			//alternately run monitor and semaphore barriers
 			if(iteration % 2 == 0)
 			{
-				continue;
-				//barrier_type = "Monitor Barrier";
-				//threadedNormalize(mb, inputVector);
+				barrier_type = "Monitor Barrier";
+				threadedNormalize(mb, inputVector);
 			}
 			else
 			{
-				barrier_type = "Semaphore Barrier";
-				threadedNormalize(sb, inputVector);
+				continue;
+				//barrier_type = "Semaphore Barrier";
+				//threadedNormalize(sb, inputVector);
 			}
 			threadedNormalize(spin, solutionVector); 
 			if(solutionVector.toString().equals(inputVector.toString()))
