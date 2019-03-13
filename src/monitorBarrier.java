@@ -5,16 +5,21 @@ public class monitorBarrier implements Barrier
 	 */
 	public monitorBarrier(int N)
 	{
-		/*
-		 *	Code for your constructor here
-		 */
+		//condition
+		//state
 		//throw new java.lang.UnsupportedOperationException("Monitor not supported yet.");
 	}
 	public void arriveAndWait()
 	{
+		initialize();
 		/*
 		 *	Your code here
 		 */
 		//throw new java.lang.UnsupportedOperationException("Monitor not supported yet.");
 	}
+
+	private void initialize() {
+		//Initialize Monitor?
+	}
+
 }
