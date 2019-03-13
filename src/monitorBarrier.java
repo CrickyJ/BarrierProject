@@ -23,7 +23,7 @@ public class monitorBarrier implements Barrier
 //		}
 		//throw new java.lang.UnsupportedOperationException("Monitor not supported yet.");
 	}
-	public void arriveAndWait()
+	public synchronized void arriveAndWait()
 	{
 		//threadState current = state[count.incrementAndGet()]; //State of thread calling arriveAndWait()
 		switch(state) {
@@ -54,8 +54,9 @@ public class monitorBarrier implements Barrier
 		initialize(); //re-initialize thread for re-use
 	}
 
-	private void threadWait(){ //Thread will wait
-		try {
+	private synchronized void threadWait() { //Thread will wait
+		System.out.println("WAIT: Count = " + count.get());
+	    try {
 			this.wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -68,7 +69,9 @@ public class monitorBarrier implements Barrier
     }
 
 	private void initialize() {
+	    System.out.println("--EXIT--");
 	    count.set(0);
+	    state = threadState.arriving;
 	}
 
 }
