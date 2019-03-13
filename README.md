@@ -1,2 +1,2 @@
-# BarrierProject
-OS - Barrier Project using Semaphores and Monitors
+# BarrierProject - Monitor
+OS - Barrier Project using Monitors
