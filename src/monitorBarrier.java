@@ -55,7 +55,7 @@ public class monitorBarrier implements Barrier
 	}
 
 	private synchronized void threadWait() { //Thread will wait
-		System.out.println("WAIT: Count = " + count.get());
+		//System.out.println("WAIT: Count = " + count.get());
 	    try {
 			this.wait();
 		} catch (InterruptedException e) {
@@ -64,12 +64,12 @@ public class monitorBarrier implements Barrier
 	}
 
 	private void signalAll() { //Used when last thread reaches barrier
-		System.out.println("Signal All");
+		//System.out.println("Signal All");
 		this.notifyAll(); //Notify all other threads
     }
 
 	private void initialize() {
-	    System.out.println("--EXIT--");
+	    //System.out.println("--EXIT--");
 	    count.set(0);
 	    state = threadState.arriving;
 	}
