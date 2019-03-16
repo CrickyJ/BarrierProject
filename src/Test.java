@@ -58,9 +58,9 @@ public class Test
 			}
 			else
 			{
-				continue;
-				//barrier_type = "Semaphore Barrier";
-				//threadedNormalize(sb, inputVector);
+				//continue;
+				barrier_type = "Semaphore Barrier";
+				threadedNormalize(sb, inputVector);
 			}
 			threadedNormalize(spin, solutionVector); 
 			if(solutionVector.toString().equals(inputVector.toString()))

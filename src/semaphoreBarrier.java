@@ -1,14 +1,15 @@
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class semaphoreBarrier implements Barrier { //TODO: UPDATE semaphoreBarrier
+public class semaphoreBarrier implements Barrier {
 	//Private members and methods here
-	private AtomicInteger count = new AtomicInteger(0); //
-	//private AtomicInteger leaving = new AtomicInteger(0);
-	//private int count = 0; // use this instead of AtomicInts
+	private AtomicInteger arrived = new AtomicInteger(0), cycle = new AtomicInteger(2); //
+	private AtomicInteger leaving = new AtomicInteger(0);
+	private int count = 0; // use this instead of AtomicInts
 	private int max = 0; //maximum threads barrier will count
-	private boolean isReturning = false; //true on second call of arriveAndWait()
-	Semaphore mutex = new Semaphore(1), barrier = new Semaphore(0); //mutex starts locked, barrier starts unlocked
+	private boolean isReturning = false;
+	private final Semaphore mutex = new Semaphore(0),
+			barrier1 = new Semaphore(1);
 
 	public semaphoreBarrier(int N) {
 		max = N;
@@ -16,45 +17,37 @@ public class semaphoreBarrier implements Barrier { //TODO: UPDATE semaphoreBarri
 	}
 
 	public void arriveAndWait() {
+		if(cycle.get()%2 == 0){
+			try{
+				mutex.drainPermits();
+				//System.out.println("I got here!");
+				barrier1.acquire();
+				if(arrived.incrementAndGet()%max == 0){
+					cycle.incrementAndGet();
 
-		//System.out.println(isReturning);
-		//System.out.println(max);
-//		if (isReturning) { //on second call
-//			//System.out.println("RELEASE");
-//			//barrier.release();
-//			//System.out.println(barrier.availablePermits());
-//		}
-		try {
-			mutex.acquire();
-			//System.out.println("Count = " + count.incrementAndGet());
-			//if(max == count.incrementAndGet()) {
-			if(count.get() == max) { //All threads counted
-				//System.out.println("PASS -- RELEASE BARRIER");
-				isReturning = false;
-				count.set(0);
-				barrier.release();
+					mutex.release();
+					//System.out.println("I got here too!" + arrived.get() + " " + cycle.get());
+				}
+				//System.out.println(arrived.get());
+			} catch(Exception e)
+			{
+				e.printStackTrace();
+			} finally{
+				barrier1.release();
 			}
+			try{
+				mutex.acquire();
+				leaving.incrementAndGet();
+				if(cycle.get()%2 == 0) count++;
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		} else {
 			mutex.release();
-		} catch (Exception e) {
-			e.printStackTrace();
+			//mutex.drainPermits();
+			if(leaving.get()%max == 0)
+				cycle.incrementAndGet();
 		}
-		try { //LEAVE BARRIER
-			barrier.acquire(); //Wait until last thread
-			barrier.release();
-			if(count.get() != 0) {
-				System.out.println("WHY LEAVE? " + count.get());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	private void printMutex() {
-		System.out.println("MUTEX: " + mutex.getQueueLength());
-	}
-
-	private void printBarrier() {
-		System.out.println("BARRIER: " + barrier.getQueueLength());
 	}
 }
