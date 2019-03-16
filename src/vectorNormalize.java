@@ -26,11 +26,12 @@ public class vectorNormalize implements Runnable
 			mag_sq.add(value * value);
 		}
 		b.arriveAndWait();
+//		System.out.println("ENTERING CS");
 		for(int i = id; i < vector.size(); i += N)
 		{
 			vector.set(i, vector.get(i)/Math.sqrt(mag_sq.sum()));
 		}
 		b.arriveAndWait();
-		//System.out.println("TEST DONE");
+//		System.out.println("LEAVING CS");
 	}
 }

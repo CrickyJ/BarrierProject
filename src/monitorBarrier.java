@@ -17,15 +17,9 @@ public class monitorBarrier implements Barrier
 	{
 	    max = N;
 	    state = threadState.arriving;
-//		state = new threadState[max]; //every thread will have its own state
-//		for(int i = 0; i < max; i++) { //for each thread
-//			state[i] = threadState.arriving;
-//		}
-		//throw new java.lang.UnsupportedOperationException("Monitor not supported yet.");
 	}
 	public synchronized void arriveAndWait()
 	{
-		//threadState current = state[count.incrementAndGet()]; //State of thread calling arriveAndWait()
 		switch(state) {
 			case arriving: //First time arriveAndWait() is called
 				if (count.incrementAndGet() == max) {//if all threads have reached critical section
@@ -48,14 +42,12 @@ public class monitorBarrier implements Barrier
 			default:
 				System.out.println("ERROR: UNKNOWN THREAD STATE");
 				return;
-			//throw new java.lang.UnsupportedOperationException("Monitor not supported yet.");
 		} //END OF switch(state)
 
 		initialize(); //re-initialize thread for re-use
 	}
 
 	private synchronized void threadWait() { //Thread will wait
-		//System.out.println("WAIT: Count = " + count.get());
 	    try {
 			this.wait();
 		} catch (InterruptedException e) {
@@ -64,12 +56,10 @@ public class monitorBarrier implements Barrier
 	}
 
 	private void signalAll() { //Used when last thread reaches barrier
-		//System.out.println("Signal All");
 		this.notifyAll(); //Notify all other threads
     }
 
 	private void initialize() {
-	    //System.out.println("--EXIT--");
 	    count.set(0);
 	    state = threadState.arriving;
 	}
